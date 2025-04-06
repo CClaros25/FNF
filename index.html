@@ -68,17 +68,27 @@
       margin-top: 20px;
     }
 
+    /* Layout for title image and GF sprite */
+    #title-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    #title-container img {
+      margin-right: 20px;
+    }
+
     /* GF sprite on the right side */
     #gf-sprite {
-      position: absolute;
-      right: 20px;  /* space from the right edge */
-      bottom: 20px;  /* space from the bottom edge */
-      display: block;
+      position: relative;
       background-image: url('gf_title.gif'); /* Set gif as background */
       background-size: contain;
       background-repeat: no-repeat;
-      width: auto;
+      width: 200px;  /* Adjust size as needed */
       height: auto;
+      margin-left: 20px;
     }
 
     canvas {
@@ -94,10 +104,15 @@
   </div>
 
   <div id="title-screen" class="centered">
-    <div id="gf-sprite"></div>
-    <div id="title-container" style="position: relative; display: inline-block; text-align: left;">
-      <img src="title.gf" alt="GF Title" id="title-image">
+    <!-- Title and GF sprite side by side -->
+    <div id="title-container">
+      <!-- Title image with bump animation -->
+      <img src="https://static.wikia.nocookie.net/fridaynightfunking/images/3/38/KeroGFLogo.gif/revision/latest?cb=20230807001546" alt="GF Title" id="title-image">
+      
+      <!-- GF sprite on the right side -->
+      <div id="gf-sprite"></div>
     </div>
+
     <p id="press-enter">Press ENTER to Start</p>
   </div>
 
