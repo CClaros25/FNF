@@ -41,8 +41,8 @@
     .menu-button {
       display: block;
       margin: 12px auto;
-      width: 300px;
-      height: 80px;
+      width: 750px;  /* Increase size */
+      height: 240px;  /* Increase size */
       background-size: contain;
       background-repeat: no-repeat;
       transition: 0.3s;
@@ -56,37 +56,34 @@
     /* Normal images for buttons */
     #story-mode {
       background-image: url('story-mode.gif');
-      width: 750px;  /* Increase size */
-      height: 240px;  /* Increase size */
     }
 
     #free-play {
       background-image: url('free-play.gif');
-      width: 750px;  /* Increase size */
-      height: 240px;  /* Increase size */
     }
 
     #options {
       background-image: url('options.gif');
-      width: 750px;  /* Increase size */
-      height: 240px;  /* Increase size */
     }
 
-/* Hover images for buttons */
-#story-mode:hover {
-  background-image: url('story-mode-hover.gif');
+    /* Hover images for buttons */
+    #story-mode:hover,
+    #story-mode.selected {
+      background-image: url('story-mode-hover.gif');
     }
 
-#free-play:hover {
-  background-image: url('free-play-hover.gif');
+    #free-play:hover,
+    #free-play.selected {
+      background-image: url('free-play-hover.gif');
     }
 
-#options:hover {
-  background-image: url('options-hover.gif');
+    #options:hover,
+    #options.selected {
+      background-image: url('options-hover.gif');
     }
 
     #story-mode, #free-play, #options {
-  transition: none;  /* Ensures no transition is applied */
+      transition: none;  /* Ensures no transition is applied */
     }
 
     #title-image {
@@ -176,6 +173,7 @@
 
     function updateMenuSelection() {
       menuButtons.forEach((btn, i) => {
+        // Add 'selected' class to the selected button and remove from others
         btn.classList.toggle('selected', i === selectedIndex);
       });
     }
