@@ -47,20 +47,7 @@
       background-color: #ff3399;
     }
 
-    /* GF sprite on the right side */
-    #gf-sprite {
-      position: absolute;
-      right: 20px;  /* space from the right edge */
-      bottom: 20px;  /* space from the bottom edge */
-      display: block;
-      background-image: url('gf_title.gif');
-      background-size: contain;
-      background-repeat: no-repeat;
-      width: auto;
-      height: auto;
-    }
-
-    /* Title image bouncing animation */
+    /* Title image with bump animation */
     #title-image {
       width: 500px; /* Adjust the size of the title image */
       animation: bump 1s ease infinite; /* Bump animation */
@@ -79,6 +66,19 @@
     #press-enter {
       font-size: 24px;
       margin-top: 20px;
+    }
+
+    /* GF sprite on the right side */
+    #gf-sprite {
+      position: absolute;
+      right: 20px;  /* space from the right edge */
+      bottom: 20px;  /* space from the bottom edge */
+      display: block;
+      background-image: url('gf_title.gif'); /* Set gif as background */
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: auto;
+      height: auto;
     }
 
     canvas {
@@ -100,6 +100,9 @@
     </div>
     <p id="press-enter">Press ENTER to Start</p>
   </div>
+
+  <!-- GF sprite on the right side -->
+  <div id="gf-sprite"></div>
 
   <div id="main-menu" class="centered">
     <button id="story-mode">Story Mode</button>
