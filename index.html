@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FNF Clone Starter</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       margin: 0;
@@ -12,7 +12,7 @@
       background: black;
       color: white;
       text-align: center;
-      overflow: hidden; /* Prevent scrollbars */
+      overflow: hidden;
     }
 
     #credit-screen, #title-screen, #main-menu {
@@ -26,6 +26,10 @@
       transform: translate(-50%, -50%);
     }
 
+    #main-menu {
+      cursor: none; /* hide mouse */
+    }
+
     #credit-screen, #title-screen {
       font-size: 24px;
     }
@@ -37,38 +41,32 @@
       font-size: 20px;
       border: none;
       border-radius: 8px;
-      cursor: pointer;
       background-color: #ff007f;
       color: white;
       transition: 0.3s;
     }
 
-    #main-menu button:hover {
+    #main-menu button:hover,
+    #main-menu button.selected {
       background-color: #ff3399;
+      outline: 2px solid white;
     }
 
-    /* Title image with bump animation */
     #title-image {
-      width: 500px; /* Adjust the size of the title image */
-      animation: bump 1s ease infinite; /* Bump animation */
+      width: 500px;
+      animation: bump 1s ease infinite;
     }
 
     @keyframes bump {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.1); /* "Bump" effect by slightly enlarging the image */
-      }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
     }
 
-    /* Position the text below the title */
     #press-enter {
       font-size: 24px;
       margin-top: 20px;
     }
 
-    /* Layout for title image and GF sprite */
     #title-container {
       display: flex;
       justify-content: center;
@@ -80,14 +78,13 @@
       margin-right: 20px;
     }
 
-    /* GF sprite on the right side */
     #gf-sprite {
       position: relative;
-      background-image: url('gf_title.gif'); /* Set gif as background */
+      background-image: url('gf_title.gif');
       background-size: contain;
       background-repeat: no-repeat;
-      width: 200px;  /* Adjust size as needed */
-      height: 300px; /* Set height to match the sprite size */
+      width: 200px;
+      height: 300px;
       margin-left: 20px;
       display: inline-block;
     }
@@ -105,15 +102,10 @@
   </div>
 
   <div id="title-screen" class="centered">
-    <!-- Title and GF sprite side by side -->
     <div id="title-container">
-      <!-- Title image with bump animation -->
-      <img src="title.gif" alt="GF Title" id="title-image">
-      
-      <!-- GF sprite on the right side -->
+      <img src="title.gif" alt="Title Logo" id="title-image" />
       <div id="gf-sprite"></div>
     </div>
-
     <p id="press-enter">Press ENTER to Start</p>
   </div>
 
@@ -126,70 +118,100 @@
   <canvas id="game-canvas" width="800" height="600" style="display: none;"></canvas>
 
   <audio id="menu-music" loop>
-  <source src="freakyMenu.ogg" type="audio/ogg">
-  Your browser does not support the audio element.
-</audio>
+    <source src="freakyMenu.ogg" type="audio/ogg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="confirm-sfx">
+    <source src="confirmMenu.ogg" type="audio/ogg" />
+  </audio>
 
   <script>
-  const creditScreen = document.getElementById('credit-screen');
-  const titleScreen = document.getElementById('title-screen');
-  const mainMenu = document.getElementById('main-menu');
-  const canvas = document.getElementById('game-canvas');
-  const ctx = canvas.getContext('2d');
-  const music = document.getElementById('menu-music');
+    const creditScreen = document.getElementById('credit-screen');
+    const titleScreen = document.getElementById('title-screen');
+    const mainMenu = document.getElementById('main-menu');
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const music = document.getElementById('menu-music');
+    const confirmSound = document.getElementById('confirm-sfx');
+    const menuButtons = mainMenu.querySelectorAll('button');
+    let selectedIndex = 0;
 
-  // Show credit screen first
-  creditScreen.style.display = 'block';
-
-  setTimeout(() => {
-    creditScreen.style.display = 'none';
-    titleScreen.style.display = 'block';
-    music.play();
-  }, 2000); // 2 seconds of credits
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && titleScreen.style.display === 'block') {
-      titleScreen.style.display = 'none';
-      mainMenu.style.display = 'block';
-    }
-  });
-
-  // Menu button functionality
-  document.getElementById('story-mode').addEventListener('click', () => {
-    mainMenu.style.display = 'none';
-    canvas.style.display = 'block';
-    music.pause();
-    startGame();
-  });
-
-  document.getElementById('free-play').addEventListener('click', () => {
-    alert('Free Play coming soon!');
-  });
-
-  document.getElementById('options').addEventListener('click', () => {
-    alert('Options coming soon!');
-  });
-
-  function startGame() {
-    const notes = [
-      { x: 300, y: -100, speed: 3 },
-      { x: 400, y: -300, speed: 3 }
-    ];
-
-    function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      notes.forEach(note => {
-        note.y += note.speed;
-        ctx.fillStyle = '#0ff';
-        ctx.fillRect(note.x, note.y, 50, 20);
+    function updateMenuSelection() {
+      menuButtons.forEach((btn, i) => {
+        btn.classList.toggle('selected', i === selectedIndex);
       });
-
-      requestAnimationFrame(gameLoop);
     }
 
-    gameLoop();
-  }
+    // Show credit screen first
+    creditScreen.style.display = 'block';
+
+    setTimeout(() => {
+      creditScreen.style.display = 'none';
+      titleScreen.style.display = 'block';
+      music.play();
+    }, 2000);
+
+    document.addEventListener('keydown', (e) => {
+      if (titleScreen.style.display === 'block') {
+        if (e.key === 'Enter') {
+          titleScreen.style.display = 'none';
+          mainMenu.style.display = 'block';
+          updateMenuSelection();
+        }
+        return;
+      }
+
+      if (mainMenu.style.display === 'block') {
+        if (e.key === 'ArrowUp') {
+          selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
+          updateMenuSelection();
+        } else if (e.key === 'ArrowDown') {
+          selectedIndex = (selectedIndex + 1) % menuButtons.length;
+          updateMenuSelection();
+        } else if (e.key === 'Enter') {
+          confirmSound.play();
+          menuButtons[selectedIndex].click();
+        }
+      }
+    });
+
+    // Menu button functionality
+    document.getElementById('story-mode').addEventListener('click', () => {
+      mainMenu.style.display = 'none';
+      canvas.style.display = 'block';
+      music.pause();
+      startGame();
+    });
+
+    document.getElementById('free-play').addEventListener('click', () => {
+      alert('Free Play coming soon!');
+    });
+
+    document.getElementById('options').addEventListener('click', () => {
+      alert('Options coming soon!');
+    });
+
+    function startGame() {
+      const notes = [
+        { x: 300, y: -100, speed: 3 },
+        { x: 400, y: -300, speed: 3 }
+      ];
+
+      function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        notes.forEach(note => {
+          note.y += note.speed;
+          ctx.fillStyle = '#0ff';
+          ctx.fillRect(note.x, note.y, 50, 20);
+        });
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      gameLoop();
+    }
   </script>
 </body>
 </html>
