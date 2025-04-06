@@ -13,7 +13,6 @@
       color: white;
       text-align: center;
       overflow: hidden;
-      cursor: none;
     }
 
     #credit-screen, #title-screen, #main-menu {
@@ -42,8 +41,8 @@
     .menu-button {
       display: block;
       margin: 12px auto;
-      width: 750px;  /* Increase size */
-      height: 240px;  /* Increase size */
+      width: 300px;
+      height: 80px;
       background-size: contain;
       background-repeat: no-repeat;
       transition: 0.3s;
@@ -57,29 +56,32 @@
     /* Normal images for buttons */
     #story-mode {
       background-image: url('story-mode.gif');
+      width: 750px;  /* Increase size */
+      height: 240px;  /* Increase size */
     }
 
     #free-play {
       background-image: url('free-play.gif');
+      width: 750px;  /* Increase size */
+      height: 240px;  /* Increase size */
     }
 
     #options {
       background-image: url('options.gif');
+      width: 750px;  /* Increase size */
+      height: 240px;  /* Increase size */
     }
 
     /* Hover images for buttons */
-    #story-mode:hover,
-    #story-mode.selected {
+    #story-mode:hover {
       background-image: url('story-mode-hover.gif');
     }
 
-    #free-play:hover,
-    #free-play.selected {
+    #free-play:hover {
       background-image: url('free-play-hover.gif');
     }
 
-    #options:hover,
-    #options.selected {
+    #options:hover {
       background-image: url('options-hover.gif');
     }
 
@@ -157,6 +159,10 @@
     Your browser does not support the audio element.
   </audio>
 
+  <audio id="scroll-sfx">
+    <source src="scrollMenu.ogg" type="audio/ogg" />
+  </audio>
+
   <audio id="confirm-sfx">
     <source src="confirmMenu.ogg" type="audio/ogg" />
   </audio>
@@ -168,13 +174,17 @@
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
     const music = document.getElementById('menu-music');
+    const scrollSound = document.getElementById('scroll-sfx');
     const confirmSound = document.getElementById('confirm-sfx');
     const menuButtons = mainMenu.querySelectorAll('.menu-button');
     let selectedIndex = 0;
+    let backgroundPosY = 0;
 
+    const volumeLevels = [0.0, 0.14, 0.28, 0.42, 0.57, 0.71, 0.85, 1.0]; // Predefined volume levels
+    let volumeLevel = 7; // Start at max volume (level 7)
+    
     function updateMenuSelection() {
       menuButtons.forEach((btn, i) => {
-        // Add 'selected' class to the selected button and remove from others
         btn.classList.toggle('selected', i === selectedIndex);
       });
     }
@@ -202,13 +212,29 @@
         if (e.key === 'ArrowUp') {
           selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
           updateMenuSelection();
+          scrollSound.play(); // Play the scroll sound
+          backgroundPosY += 10; // Move the background up
         } else if (e.key === 'ArrowDown') {
           selectedIndex = (selectedIndex + 1) % menuButtons.length;
           updateMenuSelection();
+          scrollSound.play(); // Play the scroll sound
+          backgroundPosY -= 10; // Move the background down
         } else if (e.key === 'Enter') {
           confirmSound.play();
           menuButtons[selectedIndex].click();
         }
+
+        // Smoothly move the background
+        mainMenu.style.backgroundPosition = `center ${backgroundPosY}px`;
+      }
+
+      // Change volume with - and + keys (0 to 7 levels)
+      if (e.key === '-') {
+        volumeLevel = Math.max(0, volumeLevel - 1); // Decrease volume level
+        music.volume = volumeLevels[volumeLevel]; // Set volume to corresponding level
+      } else if (e.key === '+') {
+        volumeLevel = Math.min(7, volumeLevel + 1); // Increase volume level
+        music.volume = volumeLevels[volumeLevel]; // Set volume to corresponding level
       }
     });
 
