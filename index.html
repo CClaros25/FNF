@@ -47,12 +47,18 @@
     }
 
     #gf-sprite {
-      position: absolute;
-      right: 20px;       /* space from the right edge */
-      bottom: 20px;      /* space from the bottom edge */
-      display: block;
-      background-image: url('gf_title.gif');
-    }
+  position: absolute;
+  right: 20px;       /* space from the right edge */
+  bottom: 20px;      /* space from the bottom edge */
+  display: block;
+  background-image: url('gf_title.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  /* Trick: let it size to the image using JavaScript (see below) */
+  width: auto;
+  height: auto;
+}
 
     canvas {
       background-color: #222;
