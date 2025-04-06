@@ -93,65 +93,75 @@
   </audio>
 
   <script>
-    const creditScreen = document.getElementById('credit-screen');
-    const titleScreen = document.getElementById('title-screen');
-    const mainMenu = document.getElementById('main-menu');
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
-    const music = document.getElementById('menu-music');
+  const creditScreen = document.getElementById('credit-screen');
+  const titleScreen = document.getElementById('title-screen');
+  const mainMenu = document.getElementById('main-menu');
+  const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
+  const music = document.getElementById('menu-music');
 
-    // Show credit screen first
-    creditScreen.style.display = 'block';
+  // Show credit screen first
+  creditScreen.style.display = 'block';
 
-    setTimeout(() => {
-      creditScreen.style.display = 'none';
-      titleScreen.style.display = 'block';
-      music.play();
-    }, 2000); // 2 seconds of credits
+  setTimeout(() => {
+    creditScreen.style.display = 'none';
+    titleScreen.style.display = 'block';
+    music.play();
+  }, 2000); // 2 seconds of credits
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && titleScreen.style.display === 'block') {
-        titleScreen.style.display = 'none';
-        mainMenu.style.display = 'block';
-      }
-    });
-
-    // You can add functionality for buttons here
-    document.getElementById('story-mode').addEventListener('click', () => {
-      mainMenu.style.display = 'none';
-      canvas.style.display = 'block';
-      music.pause();
-      startGame();
-    });
-
-    document.getElementById('free-play').addEventListener('click', () => {
-      alert('Free Play coming soon!');
-    });
-
-    document.getElementById('options').addEventListener('click', () => {
-      alert('Options coming soon!');
-    });
-
-    function startGame() {
-      const notes = [
-        { x: 300, y: -100, speed: 3 },
-        { x: 400, y: -300, speed: 3 }
-      ];
-
-      function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        notes.forEach(note => {
-          note.y += note.speed;
-          ctx.fillStyle = '#0ff';
-          ctx.fillRect(note.x, note.y, 50, 20);
-        });
-
-        requestAnimationFrame(gameLoop);
-      }
-
-      gameLoop();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && titleScreen.style.display === 'block') {
+      titleScreen.style.display = 'none';
+      mainMenu.style.display = 'block';
     }
-  </script>
+  });
+
+  // Menu button functionality
+  document.getElementById('story-mode').addEventListener('click', () => {
+    mainMenu.style.display = 'none';
+    canvas.style.display = 'block';
+    music.pause();
+    startGame();
+  });
+
+  document.getElementById('free-play').addEventListener('click', () => {
+    alert('Free Play coming soon!');
+  });
+
+  document.getElementById('options').addEventListener('click', () => {
+    alert('Options coming soon!');
+  });
+
+  function startGame() {
+    const notes = [
+      { x: 300, y: -100, speed: 3 },
+      { x: 400, y: -300, speed: 3 }
+    ];
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      notes.forEach(note => {
+        note.y += note.speed;
+        ctx.fillStyle = '#0ff';
+        ctx.fillRect(note.x, note.y, 50, 20);
+      });
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  }
+
+  // 👇 Auto-size the GF sprite based on the gif size
+  const gfSprite = document.getElementById('gf-sprite');
+  const gif = new Image();
+  gif.src = 'gf_title.gif';
+
+  gif.onload = () => {
+    gfSprite.style.width = gif.width + 'px';
+    gfSprite.style.height = gif.height + 'px';
+  };
+</script>
 </body>
 </html>
