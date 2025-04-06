@@ -56,27 +56,37 @@
     /* Normal images for buttons */
     #story-mode {
       background-image: url('story-mode.gif');
+      width: 250px;  /* Increase size */
+      height: 80px;  /* Increase size */
     }
 
     #free-play {
       background-image: url('free-play.gif');
+      width: 250px;  /* Increase size */
+      height: 80px;  /* Increase size */
     }
 
     #options {
       background-image: url('options.gif');
+      width: 250px;  /* Increase size */
+      height: 80px;  /* Increase size */
     }
 
-    /* Hover images for buttons */
-    #story-mode:hover {
-      background-image: url('story-mode-hover.gif');
+/* Hover images for buttons */
+#story-mode:hover {
+  background-image: url('story-mode-hover.gif');
     }
 
-    #free-play:hover {
-      background-image: url('free-play-hover.gif');
+#free-play:hover {
+  background-image: url('free-play-hover.gif');
     }
 
-    #options:hover {
-      background-image: url('options-hover.gif');
+#options:hover {
+  background-image: url('options-hover.gif');
+    }
+
+    #story-mode, #free-play, #options {
+  transition: none;  /* Ensures no transition is applied */
     }
 
     #title-image {
