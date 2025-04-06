@@ -37,22 +37,46 @@
       font-size: 24px;
     }
 
-    #main-menu button {
+    /* Style for the image buttons */
+    .menu-button {
       display: block;
       margin: 12px auto;
-      padding: 12px 24px;
-      font-size: 20px;
-      border: none;
-      border-radius: 8px;
-      background-color: #ff007f;
-      color: white;
+      width: 300px;
+      height: 80px;
+      background-size: contain;
+      background-repeat: no-repeat;
       transition: 0.3s;
     }
 
-    #main-menu button:hover,
-    #main-menu button.selected {
-      background-color: #ff3399;
-      outline: 2px solid white;
+    .menu-button:hover {
+      transform: scale(1.1);
+      filter: brightness(1.2);
+    }
+
+    /* Normal images for buttons */
+    #story-mode {
+      background-image: url('story-mode.png');
+    }
+
+    #free-play {
+      background-image: url('free-play.png');
+    }
+
+    #options {
+      background-image: url('options.png');
+    }
+
+    /* Hover images for buttons */
+    #story-mode:hover {
+      background-image: url('story-mode-hover.png');
+    }
+
+    #free-play:hover {
+      background-image: url('free-play-hover.png');
+    }
+
+    #options:hover {
+      background-image: url('options-hover.png');
     }
 
     #title-image {
@@ -113,9 +137,9 @@
   </div>
 
   <div id="main-menu" class="centered">
-    <button id="story-mode">Story Mode</button>
-    <button id="free-play">Free Play</button>
-    <button id="options">Options</button>
+    <div id="story-mode" class="menu-button"></div>
+    <div id="free-play" class="menu-button"></div>
+    <div id="options" class="menu-button"></div>
   </div>
 
   <canvas id="game-canvas" width="800" height="600" style="display: none;"></canvas>
@@ -137,7 +161,7 @@
     const ctx = canvas.getContext('2d');
     const music = document.getElementById('menu-music');
     const confirmSound = document.getElementById('confirm-sfx');
-    const menuButtons = mainMenu.querySelectorAll('button');
+    const menuButtons = mainMenu.querySelectorAll('.menu-button');
     let selectedIndex = 0;
 
     function updateMenuSelection() {
