@@ -12,6 +12,7 @@
       background: black;
       color: white;
       text-align: center;
+      overflow: hidden; /* Prevent scrollbars */
     }
 
     #credit-screen, #title-screen, #main-menu {
@@ -46,30 +47,38 @@
       background-color: #ff3399;
     }
 
-    #title-image {
-      width: 500px;  /* Adjust size as needed */
-      animation: bounce 1s ease infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-20px);
-      }
-    }
-
+    /* GF sprite on the right side */
     #gf-sprite {
       position: absolute;
-      right: 20px; /* space from the right edge */
-      bottom: 20px; /* space from the bottom edge */
+      right: 20px;  /* space from the right edge */
+      bottom: 20px;  /* space from the bottom edge */
       display: block;
       background-image: url('gf_title.gif');
       background-size: contain;
       background-repeat: no-repeat;
       width: auto;
       height: auto;
+    }
+
+    /* Title image bouncing animation */
+    #title-image {
+      width: 500px; /* Adjust the size of the title image */
+      animation: bump 1s ease infinite; /* Bump animation */
+    }
+
+    @keyframes bump {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1); /* "Bump" effect by slightly enlarging the image */
+      }
+    }
+
+    /* Position the text below the title */
+    #press-enter {
+      font-size: 24px;
+      margin-top: 20px;
     }
 
     canvas {
@@ -85,9 +94,11 @@
   </div>
 
   <div id="title-screen" class="centered">
-    <!-- Title image instead of text -->
-    <img src="https://static.wikia.nocookie.net/fridaynightfunking/images/3/38/KeroGFLogo.gif/revision/latest?cb=20230807001546" alt="GF Title" id="title-image">
-    <p>Press ENTER to Start</p>
+    <!-- Title image with bump animation -->
+    <div id="title-container" style="position: relative; display: inline-block; text-align: left;">
+      <img src="https://static.wikia.nocookie.net/fridaynightfunking/images/3/38/KeroGFLogo.gif/revision/latest?cb=20230807001546" alt="GF Title" id="title-image">
+    </div>
+    <p id="press-enter">Press ENTER to Start</p>
   </div>
 
   <div id="main-menu" class="centered">
