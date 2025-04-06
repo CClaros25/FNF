@@ -235,12 +235,16 @@
           selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
           updateMenuSelection();
           scrollSound.play(); // Play the scroll sound
-          backgroundPosY += 10; // Move the background up
+          if (backgroundPosY < 0) {
+            backgroundPosY += 10; // Move the background up
+          }
         } else if (e.key === 'ArrowDown') {
           selectedIndex = (selectedIndex + 1) % menuButtons.length;
           updateMenuSelection();
           scrollSound.play(); // Play the scroll sound
-          backgroundPosY -= 10; // Move the background down
+          if (backgroundPosY > -200) {  // Change this value according to how much space the image takes
+            backgroundPosY -= 10; // Move the background down
+          }
         } else if (e.key === 'Enter') {
           confirmSound.play();
           menuButtons[selectedIndex].click();
