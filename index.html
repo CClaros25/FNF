@@ -31,6 +31,7 @@
       width: 100vw;
       height: 100vh;
       cursor: none;
+      transition: background-position 0.5s ease;  /* Smooth background movement */
     }
 
     #credit-screen, #title-screen {
@@ -41,8 +42,8 @@
     .menu-button {
       display: block;
       margin: 12px auto;
-      width: 300px;
-      height: 80px;
+      width: 750px;
+      height: 240px;
       background-size: contain;
       background-repeat: no-repeat;
       transition: 0.3s;
@@ -56,32 +57,29 @@
     /* Normal images for buttons */
     #story-mode {
       background-image: url('story-mode.gif');
-      width: 750px;  /* Increase size */
-      height: 240px;  /* Increase size */
     }
 
     #free-play {
       background-image: url('free-play.gif');
-      width: 750px;  /* Increase size */
-      height: 240px;  /* Increase size */
     }
 
     #options {
       background-image: url('options.gif');
-      width: 750px;  /* Increase size */
-      height: 240px;  /* Increase size */
     }
 
     /* Hover images for buttons */
-    #story-mode:hover {
+    #story-mode:hover,
+    #story-mode.selected {
       background-image: url('story-mode-hover.gif');
     }
 
-    #free-play:hover {
+    #free-play:hover,
+    #free-play.selected {
       background-image: url('free-play-hover.gif');
     }
 
-    #options:hover {
+    #options:hover,
+    #options.selected {
       background-image: url('options-hover.gif');
     }
 
@@ -159,12 +157,12 @@
     Your browser does not support the audio element.
   </audio>
 
-  <audio id="scroll-sfx">
-    <source src="scrollMenu.ogg" type="audio/ogg" />
-  </audio>
-
   <audio id="confirm-sfx">
     <source src="confirmMenu.ogg" type="audio/ogg" />
+  </audio>
+
+  <audio id="scroll-sfx">
+    <source src="scrollMenu.ogg" type="audio/ogg" />
   </audio>
 
   <script>
@@ -174,14 +172,12 @@
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
     const music = document.getElementById('menu-music');
-    const scrollSound = document.getElementById('scroll-sfx');
     const confirmSound = document.getElementById('confirm-sfx');
+    const scrollSound = document.getElementById('scroll-sfx');
     const menuButtons = mainMenu.querySelectorAll('.menu-button');
     let selectedIndex = 0;
-    let backgroundPosY = 0;
-
-    const volumeLevels = [0.0, 0.14, 0.28, 0.42, 0.57, 0.71, 0.85, 1.0]; // Predefined volume levels
-    let volumeLevel = 7; // Start at max volume (level 7)
+    let bgPositionY = 0;  // Track background position for smooth scroll
+    let volumeLevel = 4;  // Volume level (0-7)
     
     function updateMenuSelection() {
       menuButtons.forEach((btn, i) => {
@@ -210,31 +206,31 @@
 
       if (mainMenu.style.display === 'block') {
         if (e.key === 'ArrowUp') {
-          selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
-          updateMenuSelection();
-          scrollSound.play(); // Play the scroll sound
-          backgroundPosY += 10; // Move the background up
+          if (bgPositionY < 2) {  // Limits to move only 2 steps up
+            bgPositionY += 1;
+            mainMenu.style.backgroundPositionY = `${bgPositionY * 50}px`; // Move up
+            scrollSound.play();
+            selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
+            updateMenuSelection();
+          }
         } else if (e.key === 'ArrowDown') {
-          selectedIndex = (selectedIndex + 1) % menuButtons.length;
-          updateMenuSelection();
-          scrollSound.play(); // Play the scroll sound
-          backgroundPosY -= 10; // Move the background down
+          if (bgPositionY > -2) {  // Limits to move only 2 steps down
+            bgPositionY -= 1;
+            mainMenu.style.backgroundPositionY = `${bgPositionY * 50}px`; // Move down
+            scrollSound.play();
+            selectedIndex = (selectedIndex + 1) % menuButtons.length;
+            updateMenuSelection();
+          }
         } else if (e.key === 'Enter') {
           confirmSound.play();
           menuButtons[selectedIndex].click();
+        } else if (e.key === '+' && volumeLevel < 7) {
+          volumeLevel++;
+          music.volume = volumeLevel / 7;
+        } else if (e.key === '-' && volumeLevel > 0) {
+          volumeLevel--;
+          music.volume = volumeLevel / 7;
         }
-
-        // Smoothly move the background
-        mainMenu.style.backgroundPosition = `center ${backgroundPosY}px`;
-      }
-
-      // Change volume with - and + keys (0 to 7 levels)
-      if (e.key === '-') {
-        volumeLevel = Math.max(0, volumeLevel - 1); // Decrease volume level
-        music.volume = volumeLevels[volumeLevel]; // Set volume to corresponding level
-      } else if (e.key === '+') {
-        volumeLevel = Math.min(7, volumeLevel + 1); // Increase volume level
-        music.volume = volumeLevels[volumeLevel]; // Set volume to corresponding level
       }
     });
 
