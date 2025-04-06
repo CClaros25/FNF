@@ -179,27 +179,30 @@
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
     const music = document.getElementById('menu-music');
-    const scrollSound = document.getElementById('scroll-sfx');
     const confirmSound = document.getElementById('confirm-sfx');
+    const scrollSound = document.getElementById('scroll-sfx');
     const menuButtons = mainMenu.querySelectorAll('.menu-button');
     let selectedIndex = 0;
-    let volumeLevel = 5; // Initial volume level (0-7)
+    let backgroundPosY = 0; // For smooth background movement
+    let volume = 1; // Default volume
 
-    // Function to set volume for all audio except menu music
+    // Function to set volume for all audio
     function setVolume(volume) {
       const volumeValue = volume / 7; // 0 to 1
-      const allAudio = [scrollSound, confirmSound];
+      const allAudio = [scrollSound, confirmSound, music];
 
       allAudio.forEach(audio => {
         audio.volume = volumeValue;
       });
-      
-      // Set volume for menu music (background music)
-      music.volume = volumeValue;
     }
 
     // Set initial volume
-    setVolume(volumeLevel);
+    setVolume(volume);
+
+    // Function to update background position
+    function updateBackgroundPosition() {
+      mainMenu.style.backgroundPosition = `center ${backgroundPosY}px`;
+    }
 
     // Update menu selection with 'selected' class
     function updateMenuSelection() {
@@ -208,37 +211,52 @@
       });
     }
 
-    // Event listener for keydown
+    // Show credit screen first
+    creditScreen.style.display = 'block';
+
+    setTimeout(() => {
+      creditScreen.style.display = 'none';
+      titleScreen.style.display = 'block';
+      music.play();
+    }, 2000);
+
     document.addEventListener('keydown', (e) => {
       if (titleScreen.style.display === 'block') {
         if (e.key === 'Enter') {
           titleScreen.style.display = 'none';
           mainMenu.style.display = 'block';
           updateMenuSelection();
-          music.play();
         }
         return;
       }
 
       if (mainMenu.style.display === 'block') {
         if (e.key === 'ArrowUp') {
-          selectedIndex = Math.max(0, selectedIndex - 1);
+          selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
           updateMenuSelection();
-          scrollSound.play();
+          scrollSound.play(); // Play the scroll sound
+          backgroundPosY += 10; // Move the background up
         } else if (e.key === 'ArrowDown') {
-          selectedIndex = Math.min(menuButtons.length - 1, selectedIndex + 1);
+          selectedIndex = (selectedIndex + 1) % menuButtons.length;
           updateMenuSelection();
-          scrollSound.play();
+          scrollSound.play(); // Play the scroll sound
+          backgroundPosY -= 10; // Move the background down
         } else if (e.key === 'Enter') {
           confirmSound.play();
           menuButtons[selectedIndex].click();
-        } else if (e.key === '-') {
-          volumeLevel = Math.max(0, volumeLevel - 1);
-          setVolume(volumeLevel);
-        } else if (e.key === '+') {
-          volumeLevel = Math.min(7, volumeLevel + 1);
-          setVolume(volumeLevel);
         }
+
+        // Smoothly move the background
+        updateBackgroundPosition();
+      }
+
+      // Change volume with - and + keys
+      if (e.key === '-') {
+        volume = Math.max(0, volume - 0.1);
+        setVolume(volume);
+      } else if (e.key === '+') {
+        volume = Math.min(1, volume + 0.1);
+        setVolume(volume);
       }
     });
 
@@ -258,7 +276,6 @@
       alert('Options coming soon!');
     });
 
-    // Start the game
     function startGame() {
       const notes = [
         { x: 300, y: -100, speed: 3 },
