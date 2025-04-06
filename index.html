@@ -31,6 +31,7 @@
       width: 100vw;
       height: 100vh;
       cursor: none;
+      transition: background-position 0.1s ease;
     }
 
     /* Style for the image buttons */
@@ -236,14 +237,14 @@
           updateMenuSelection();
           scrollSound.play(); // Play the scroll sound
           if (backgroundPosY < 0) {
-            backgroundPosY += 10; // Move the background up
+            backgroundPosY += 10; // Move the background up with smooth glide
           }
         } else if (e.key === 'ArrowDown') {
           selectedIndex = (selectedIndex + 1) % menuButtons.length;
           updateMenuSelection();
           scrollSound.play(); // Play the scroll sound
-          if (backgroundPosY > -200) {  // Change this value according to how much space the image takes
-            backgroundPosY -= 10; // Move the background down
+          if (backgroundPosY > -200) {  // Prevents the background from going past bottom
+            backgroundPosY -= 10; // Move the background down with smooth glide
           }
         } else if (e.key === 'Enter') {
           confirmSound.play();
