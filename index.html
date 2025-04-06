@@ -243,7 +243,7 @@
           selectedIndex = (selectedIndex + 1) % menuButtons.length;
           updateMenuSelection();
           scrollSound.play(); // Play the scroll sound
-          if (backgroundPosY > -200) {  // Prevents the background from going past bottom
+          if (backgroundPosY > -100) {  // Prevents the background from going past bottom
             backgroundPosY -= 10; // Move the background down with smooth glide
           }
         } else if (e.key === 'Enter') {
