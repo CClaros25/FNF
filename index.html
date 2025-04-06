@@ -47,23 +47,29 @@
     }
 
     #gf-sprite {
-  position: absolute;
-  right: 20px;       /* space from the right edge */
-  bottom: 20px;      /* space from the bottom edge */
-  display: block;
-  background-image: url('gf_title.gif');
-  background-size: contain;
-  background-repeat: no-repeat;
-
-  /* Trick: let it size to the image using JavaScript (see below) */
-  width: auto;
-  height: auto;
-}
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      display: block;
+      background-image: url('gf_title.gif');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      width: auto;
+      height: auto;
+    }
 
     canvas {
       background-color: #222;
       display: block;
       margin: 0 auto;
+    }
+
+    /* Fade out transition */
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -72,7 +78,7 @@
     <p>Created by You - Inspired by Friday Night Funkin'</p>
   </div>
 
-  <div id="title-screen" class="centered">
+  <div id="title-screen">
     <h1>Friday Night Clone</h1>
     <div id="gf-sprite"></div>
     <p>Press ENTER to Start</p>
@@ -82,7 +88,7 @@
     <button id="story-mode">Story Mode</button>
     <button id="free-play">Free Play</button>
     <button id="options">Options</button>
-<img src="https://static.wikia.nocookie.net/fridaynightfunking/images/3/38/KeroGFLogo.gif/revision/latest?cb=20230807001546">
+    <img src="https://static.wikia.nocookie.net/fridaynightfunking/images/3/38/KeroGFLogo.gif/revision/latest?cb=20230807001546">
   </div>
 
   <canvas id="game-canvas" width="800" height="600" style="display: none;"></canvas>
@@ -93,75 +99,81 @@
   </audio>
 
   <script>
-  const creditScreen = document.getElementById('credit-screen');
-  const titleScreen = document.getElementById('title-screen');
-  const mainMenu = document.getElementById('main-menu');
-  const canvas = document.getElementById('game-canvas');
-  const ctx = canvas.getContext('2d');
-  const music = document.getElementById('menu-music');
+    const creditScreen = document.getElementById('credit-screen');
+    const titleScreen = document.getElementById('title-screen');
+    const mainMenu = document.getElementById('main-menu');
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const music = document.getElementById('menu-music');
 
-  // Show credit screen first
-  creditScreen.style.display = 'block';
+    // Show credit screen first
+    creditScreen.style.display = 'block';
 
-  setTimeout(() => {
-    creditScreen.style.display = 'none';
-    titleScreen.style.display = 'block';
-    music.play();
-  }, 2000); // 2 seconds of credits
+    setTimeout(() => {
+      creditScreen.style.display = 'none';
+      titleScreen.style.display = 'block';
+      music.play();
+    }, 2000); // 2 seconds of credits
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && titleScreen.style.display === 'block') {
-      titleScreen.style.display = 'none';
-      mainMenu.style.display = 'block';
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && titleScreen.style.display === 'block') {
+        // Add fade-out class to title screen
+        titleScreen.classList.add('fade-out');
+
+        // Wait for the fade-out transition to finish (600ms)
+        setTimeout(() => {
+          titleScreen.style.display = 'none';
+          mainMenu.style.display = 'block';
+        }, 600); // Duration of the fade-out
+      }
+    });
+
+    // Menu button functionality
+    document.getElementById('story-mode').addEventListener('click', () => {
+      mainMenu.style.display = 'none';
+      canvas.style.display = 'block';
+      music.pause();
+      startGame();
+    });
+
+    document.getElementById('free-play').addEventListener('click', () => {
+      alert('Free Play coming soon!');
+    });
+
+    document.getElementById('options').addEventListener('click', () => {
+      alert('Options coming soon!');
+    });
+
+    function startGame() {
+      const notes = [
+        { x: 300, y: -100, speed: 3 },
+        { x: 400, y: -300, speed: 3 }
+      ];
+
+      function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        notes.forEach(note => {
+          note.y += note.speed;
+          ctx.fillStyle = '#0ff';
+          ctx.fillRect(note.x, note.y, 50, 20);
+        });
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      gameLoop();
     }
-  });
 
-  // Menu button functionality
-  document.getElementById('story-mode').addEventListener('click', () => {
-    mainMenu.style.display = 'none';
-    canvas.style.display = 'block';
-    music.pause();
-    startGame();
-  });
+    // Auto-size GF sprite based on gif dimensions
+    const gfSprite = document.getElementById('gf-sprite');
+    const gif = new Image();
+    gif.src = 'gf_title.gif';
 
-  document.getElementById('free-play').addEventListener('click', () => {
-    alert('Free Play coming soon!');
-  });
-
-  document.getElementById('options').addEventListener('click', () => {
-    alert('Options coming soon!');
-  });
-
-  function startGame() {
-    const notes = [
-      { x: 300, y: -100, speed: 3 },
-      { x: 400, y: -300, speed: 3 }
-    ];
-
-    function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      notes.forEach(note => {
-        note.y += note.speed;
-        ctx.fillStyle = '#0ff';
-        ctx.fillRect(note.x, note.y, 50, 20);
-      });
-
-      requestAnimationFrame(gameLoop);
-    }
-
-    gameLoop();
-  }
-
-  // 👇 Auto-size the GF sprite based on the gif size
-  const gfSprite = document.getElementById('gf-sprite');
-  const gif = new Image();
-  gif.src = 'gf_title.gif';
-
-  gif.onload = () => {
-    gfSprite.style.width = gif.width + 'px';
-    gfSprite.style.height = gif.height + 'px';
-  };
-</script>
+    gif.onload = () => {
+      gfSprite.style.width = gif.width + 'px';
+      gfSprite.style.height = gif.height + 'px';
+    };
+  </script>
 </body>
 </html>
