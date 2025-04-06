@@ -5,15 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FNF Clone Starter</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: black;
+      color: white;
+      text-align: center;
+    }
+
+    #credit-screen, #title-screen, #main-menu {
+      display: none;
+    }
+
+    .centered {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #credit-screen, #title-screen {
+      font-size: 24px;
+    }
+
+    #main-menu button {
+      display: block;
+      margin: 12px auto;
+      padding: 12px 24px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #ff007f;
+      color: white;
+      transition: 0.3s;
+    }
+
+    #main-menu button:hover {
+      background-color: #ff3399;
+    }
+
+    canvas {
+      background-color: #222;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
-  <div id="main-menu">
-    <h1>FNF Clone</h1>
-    <button id="start-game">Start Game</button>
+  <div id="credit-screen" class="centered">
+    <p>Created by You - Inspired by Friday Night Funkin'</p>
+  </div>
+
+  <div id="title-screen" class="centered">
+    <h1>Friday Night Clone</h1>
+    <p>Press ENTER to Start</p>
+    <!-- Add animated GF sprite here later -->
+  </div>
+
+  <div id="main-menu" class="centered">
+    <button id="story-mode">Story Mode</button>
+    <button id="free-play">Free Play</button>
+    <button id="options">Options</button>
   </div>
 
   <canvas id="game-canvas" width="800" height="600" style="display: none;"></canvas>
 
-  <script src="game.js"></script>
+  <script>
+    const creditScreen = document.getElementById('credit-screen');
+    const titleScreen = document.getElementById('title-screen');
+    const mainMenu = document.getElementById('main-menu');
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Show credit screen first
+    creditScreen.style.display = 'block';
+
+    setTimeout(() => {
+      creditScreen.style.display = 'none';
+      titleScreen.style.display = 'block';
+    }, 2000); // 2 seconds of credits
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && titleScreen.style.display === 'block') {
+        titleScreen.style.display = 'none';
+        mainMenu.style.display = 'block';
+      }
+    });
+
+    // You can add functionality for buttons here
+    document.getElementById('story-mode').addEventListener('click', () => {
+      mainMenu.style.display = 'none';
+      canvas.style.display = 'block';
+      startGame();
+    });
+
+    function startGame() {
+      const notes = [
+        { x: 300, y: -100, speed: 3 },
+        { x: 400, y: -300, speed: 3 }
+      ];
+
+      function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        notes.forEach(note => {
+          note.y += note.speed;
+          ctx.fillStyle = '#0ff';
+          ctx.fillRect(note.x, note.y, 50, 20);
+        });
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      gameLoop();
+    }
+  </script>
 </body>
 </html>
