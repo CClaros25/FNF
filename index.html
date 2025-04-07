@@ -34,7 +34,6 @@
       transition: background-position 0.1s ease;
     }
 
-    /* Style for the image buttons */
     .menu-button {
       display: block;
       margin: 12px auto;
@@ -50,7 +49,6 @@
       filter: brightness(1.2);
     }
 
-    /* Normal images for buttons */
     #story-mode {
       background-image: url('story-mode.gif');
       width: 750px;
@@ -69,7 +67,6 @@
       height: 240px;
     }
 
-    /* Hover images for buttons */
     #story-mode:hover,
     #story-mode.selected {
       background-image: url('story-mode-hover.gif');
@@ -94,7 +91,6 @@
       transition: none;
     }
 
-    /* Title and other images */
     #title-image {
       width: 500px;
       animation: bump 1s ease infinite;
@@ -136,6 +132,21 @@
       background-color: #222;
       display: block;
       margin: 0 auto;
+    }
+
+    @keyframes fadeTop {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+    }
+
+    .fade-out-top {
+      animation: fadeTop 0.7s ease forwards;
     }
   </style>
 </head>
@@ -184,49 +195,54 @@
     const scrollSound = document.getElementById('scroll-sfx');
     const menuButtons = mainMenu.querySelectorAll('.menu-button');
     let selectedIndex = 0;
-    let backgroundPosY = 0; // For smooth background movement
-    let volume = 1; // Default volume
+    let backgroundPosY = 0;
+    let volume = 1;
+    let transitioning = false;
 
-    // Function to set volume for all audio
     function setVolume(volume) {
-      const volumeValue = volume / 7; // 0 to 1
-      const allAudio = [scrollSound, confirmSound, music];
-
-      allAudio.forEach(audio => {
+      const volumeValue = volume / 7;
+      [scrollSound, confirmSound, music].forEach(audio => {
         audio.volume = volumeValue;
       });
     }
 
-    // Set initial volume
     setVolume(volume);
 
-    // Function to update background position
     function updateBackgroundPosition() {
       mainMenu.style.backgroundPosition = `center ${backgroundPosY}px`;
     }
 
-    // Update menu selection with 'selected' class
     function updateMenuSelection() {
       menuButtons.forEach((btn, i) => {
         btn.classList.toggle('selected', i === selectedIndex);
       });
     }
 
-    // Show credit screen first
     creditScreen.style.display = 'block';
-
     setTimeout(() => {
       creditScreen.style.display = 'none';
       titleScreen.style.display = 'block';
       music.play();
     }, 2000);
 
+    function fadeOutTitle() {
+      transitioning = true;
+      confirmSound.play();
+      titleScreen.classList.add('fade-out-top');
+      setTimeout(() => {
+        titleScreen.style.display = 'none';
+        mainMenu.style.display = 'block';
+        transitioning = false;
+        updateMenuSelection();
+      }, 700);
+    }
+
     document.addEventListener('keydown', (e) => {
+      if (transitioning) return;
+
       if (titleScreen.style.display === 'block') {
         if (e.key === 'Enter') {
-          titleScreen.style.display = 'none';
-          mainMenu.style.display = 'block';
-          updateMenuSelection();
+          fadeOutTitle();
         }
         return;
       }
@@ -235,27 +251,20 @@
         if (e.key === 'ArrowUp') {
           selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
           updateMenuSelection();
-          scrollSound.play(); // Play the scroll sound
-          if (backgroundPosY < 0) {
-            backgroundPosY += 10; // Move the background up with smooth glide
-          }
+          scrollSound.play();
+          if (backgroundPosY < 0) backgroundPosY += 10;
         } else if (e.key === 'ArrowDown') {
           selectedIndex = (selectedIndex + 1) % menuButtons.length;
           updateMenuSelection();
-          scrollSound.play(); // Play the scroll sound
-          if (backgroundPosY > -100) {  // Prevents the background from going past bottom
-            backgroundPosY -= 10; // Move the background down with smooth glide
-          }
+          scrollSound.play();
+          if (backgroundPosY > -100) backgroundPosY -= 10;
         } else if (e.key === 'Enter') {
           confirmSound.play();
           menuButtons[selectedIndex].click();
         }
-
-        // Smoothly move the background
         updateBackgroundPosition();
       }
 
-      // Change volume with - and + keys
       if (e.key === '-') {
         volume = Math.max(0, volume - 0.1);
         setVolume(volume);
@@ -265,7 +274,6 @@
       }
     });
 
-    // Menu button functionality
     document.getElementById('story-mode').addEventListener('click', () => {
       mainMenu.style.display = 'none';
       canvas.style.display = 'block';
@@ -289,13 +297,11 @@
 
       function gameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         notes.forEach(note => {
           note.y += note.speed;
           ctx.fillStyle = '#0ff';
           ctx.fillRect(note.x, note.y, 50, 20);
         });
-
         requestAnimationFrame(gameLoop);
       }
 
