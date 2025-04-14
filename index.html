@@ -250,22 +250,38 @@
       }
 
       if (mainMenu.style.display === 'block') {
-        if (e.key === 'ArrowUp') {
-          selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
-          updateMenuSelection();
-          scrollSound.play();
-          if (backgroundPosY < 0) backgroundPosY += 10;
-        } else if (e.key === 'ArrowDown') {
-          selectedIndex = (selectedIndex + 1) % menuButtons.length;
-          updateMenuSelection();
-          scrollSound.play();
-          if (backgroundPosY > -100) backgroundPosY -= 10;
-        } else if (e.key === 'Enter') {
-          confirmSound.play();
-          menuButtons[selectedIndex].click();
-        }
-        updateBackgroundPosition();
-      }
+  if (e.key === 'ArrowUp') {
+    const wasAtTop = selectedIndex === 0;
+    selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
+    updateMenuSelection();
+    scrollSound.play();
+
+    if (wasAtTop) {
+      backgroundPosY = 0; // Reset when wrapping from top to bottom
+    } else if (backgroundPosY < 0) {
+      backgroundPosY += 10;
+    }
+
+  } else if (e.key === 'ArrowDown') {
+    const wasAtBottom = selectedIndex === menuButtons.length - 1;
+    selectedIndex = (selectedIndex + 1) % menuButtons.length;
+    updateMenuSelection();
+    scrollSound.play();
+
+    if (wasAtBottom) {
+      backgroundPosY = 0; // Reset when wrapping from bottom to top
+    } else if (backgroundPosY > -100) {
+      backgroundPosY -= 10;
+    }
+
+  } else if (e.key === 'Enter') {
+    confirmSound.play();
+    menuButtons[selectedIndex].click();
+  }
+
+  updateBackgroundPosition();
+}
+
 
       if (e.key === '-') {
         volume = Math.max(0, volume - 0.1);
