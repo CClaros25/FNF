@@ -68,6 +68,12 @@
       height: 240px;
     }
 
+    #credits {
+    background-image: url('credits.gif');
+    width: 750px;
+    height: 240px;
+    }
+
     #story-mode:hover,
     #story-mode.selected {
       background-image: url('story-mode-hover.gif');
@@ -82,7 +88,12 @@
     #options.selected {
       background-image: url('options-hover.gif');
     }
-
+    
+    #credits:hover,
+    #credits.selected {
+      background-image: url('credits-hover.gif');
+    }
+    
     .menu-button:hover {
       transform: scale(1.1);
       filter: brightness(1.2);
@@ -169,6 +180,7 @@
     <div id="story-mode" class="menu-button"></div>
     <div id="free-play" class="menu-button"></div>
     <div id="options" class="menu-button"></div>
+    <div id="credits" class="menu-button"></div>
   </div>
 
   <canvas id="game-canvas" width="800" height="600" style="display: none;"></canvas>
@@ -306,6 +318,10 @@
     document.getElementById('options').addEventListener('click', () => {
       alert('Options coming soon!');
     });
+
+    document.getElementById('credits').addEventListener('click', () => {
+  alert('Credits coming soon!');
+});
 
     function startGame() {
       const notes = [
