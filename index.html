@@ -269,7 +269,7 @@
     scrollSound.play();
 
     if (wasAtBottom) {
-      backgroundPosY = 0; // Reset when wrapping from bottom to top
+      backgroundPosY = -25; // Reset when wrapping from bottom to top
     } else if (backgroundPosY > -100) {
       backgroundPosY -= 10;
     }
