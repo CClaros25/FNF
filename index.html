@@ -36,13 +36,13 @@
     }
 
     .menu-button {
-      display: block;
-      margin: 4px auto;
-      width: 600px;
-      height: 150px;
-      background-size: contain;
-      background-repeat: no-repeat;
-    }
+  display: block;
+  margin: 4px auto; /* reduced margin for tighter spacing */
+  width: 600px;     /* slightly smaller */
+  height: 150px;    /* slightly smaller */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 
     .menu-button:hover {
       transform: scale(1.1);
@@ -50,28 +50,28 @@
     }
 
     #story-mode {
-      background-image: url('story-mode.gif');
-      width: 500px;
-      height: 160px;
-    }
+  background-image: url('story-mode.gif');
+  width: 500px;
+  height: 160px;
+}
 
-    #free-play {
-      background-image: url('free-play.gif');
-      width: 500px;
-      height: 160px;
-    }
+#free-play {
+  background-image: url('free-play.gif');
+  width: 500px;
+  height: 160px;
+}
 
-    #options {
-      background-image: url('options.gif');
-      width: 500px;
-      height: 160px;
-    }
+#options {
+  background-image: url('options.gif');
+  width: 500px;
+  height: 160px;
+}
 
-    #credits {
-      background-image: url('credits.gif');
-      width: 500px;
-      height: 160px;
-    }
+#credits {
+  background-image: url('credits.gif');
+  width: 500px;
+  height: 160px;
+}
 
     #story-mode:hover,
     #story-mode.selected {
@@ -91,6 +91,15 @@
     #credits:hover,
     #credits.selected {
       background-image: url('credits-hover.gif');
+    }
+
+    .menu-button:hover {
+      transform: scale(1.1);
+      filter: brightness(1.2);
+    }
+
+    #story-mode, #free-play, #options {
+      transition: none;
     }
 
     #title-image {
@@ -152,28 +161,24 @@
     }
 
     #version-info {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      font-size: 14px;
-      color: white;
-      font-family: monospace;
-      text-align: left;
-      line-height: 1.4;
-      opacity: 0.7;
-      pointer-events: none;
-      text-shadow: 1px 1px 2px black;
-    }
-
-    #credit-screen img {
-      width: 100%;
-      max-width: 1000px;
-    }
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  font-size: 14px;
+  color: white;
+  font-family: monospace;
+  text-align: left;
+  line-height: 1.4;
+  opacity: 0.7;
+  pointer-events: none;
+  text-shadow: 1px 1px 2px black;
+  }
   </style>
 </head>
 <body>
   <div id="credit-screen" class="centered">
-    <img src="credits-screen.png" alt="Psych Engine Credits" />
+    <p>Inspired by Friday Night Funkin</p>
+    <p>Easy Ass Recode Ngl</p>
   </div>
 
   <div id="title-screen" class="centered">
@@ -207,7 +212,6 @@
   </audio>
 
   <div id="version-info">JS Engine v0.1 Pre-Alpha<br>Friday Night Funkin' v0.6.2</div>
-
   <script>
     const creditScreen = document.getElementById('credit-screen');
     const titleScreen = document.getElementById('title-screen');
@@ -272,37 +276,38 @@
       }
 
       if (mainMenu.style.display === 'block') {
-        if (e.key === 'ArrowUp') {
-          const wasAtTop = selectedIndex === 0;
-          selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
-          updateMenuSelection();
-          scrollSound.play();
+  if (e.key === 'ArrowUp') {
+    const wasAtTop = selectedIndex === 0;
+    selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
+    updateMenuSelection();
+    scrollSound.play();
 
-          if (wasAtTop) {
-            backgroundPosY = -100;
-          } else if (backgroundPosY < 0) {
-            backgroundPosY += 10;
-          }
+    if (wasAtTop) {
+      backgroundPosY = -100; // Reset when wrapping from top to bottom
+    } else if (backgroundPosY < 0) {
+      backgroundPosY += 10;
+    }
 
-        } else if (e.key === 'ArrowDown') {
-          const wasAtBottom = selectedIndex === menuButtons.length - 1;
-          selectedIndex = (selectedIndex + 1) % menuButtons.length;
-          updateMenuSelection();
-          scrollSound.play();
+  } else if (e.key === 'ArrowDown') {
+    const wasAtBottom = selectedIndex === menuButtons.length - 1;
+    selectedIndex = (selectedIndex + 1) % menuButtons.length;
+    updateMenuSelection();
+    scrollSound.play();
 
-          if (wasAtBottom) {
-            backgroundPosY = -75;
-          } else if (backgroundPosY > -100) {
-            backgroundPosY -= 10;
-          }
+    if (wasAtBottom) {
+      backgroundPosY = -75; // Reset when wrapping from bottom to top
+    } else if (backgroundPosY > -100) {
+      backgroundPosY -= 10;
+    }
 
-        } else if (e.key === 'Enter') {
-          confirmSound.play();
-          menuButtons[selectedIndex].click();
-        }
+  } else if (e.key === 'Enter') {
+    confirmSound.play();
+    menuButtons[selectedIndex].click();
+  }
 
-        updateBackgroundPosition();
-      }
+  updateBackgroundPosition();
+}
+
 
       if (e.key === '-') {
         volume = Math.max(0, volume - 0.1);
@@ -313,16 +318,24 @@
       }
     });
 
-    // Credits screen click behavior
-    document.getElementById('credits').addEventListener('click', () => {
+    document.getElementById('story-mode').addEventListener('click', () => {
       mainMenu.style.display = 'none';
-      creditScreen.style.display = 'block';
-
-      setTimeout(() => {
-        creditScreen.style.display = 'none';
-        mainMenu.style.display = 'block';
-      }, 4000);
+      canvas.style.display = 'block';
+      music.pause();
+      startGame();
     });
+
+    document.getElementById('free-play').addEventListener('click', () => {
+      alert('Free Play coming soon!');
+    });
+
+    document.getElementById('options').addEventListener('click', () => {
+      alert('Options coming soon!');
+    });
+
+    document.getElementById('credits').addEventListener('click', () => {
+  alert('Credits coming soon!');
+});
 
     function startGame() {
       const notes = [
