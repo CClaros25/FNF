@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Basic page setup -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FNF Clone Starter</title>
   <link rel="stylesheet" href="style.css" />
+
   <style>
+    /* Body styles */
     body {
       margin: 0;
       font-family: 'Arial', sans-serif;
@@ -13,13 +16,15 @@
       color: white;
       text-align: center;
       overflow: hidden;
-      cursor: none;
+      cursor: none; /* Hides the mouse */
     }
 
+    /* Hide screens by default */
     #credit-screen, #title-screen, #main-menu {
       display: none;
     }
 
+    /* Center elements on screen */
     .centered {
       position: absolute;
       top: 50%;
@@ -27,6 +32,7 @@
       transform: translate(-50%, -50%);
     }
 
+    /* Main menu background and style */
     #main-menu {
       background: url('menu-bg.png') center center / cover no-repeat;
       width: 100vw;
@@ -35,44 +41,48 @@
       transition: background-position 0.1s ease;
     }
 
+    /* Menu buttons (like Story Mode, Free Play, etc.) */
     .menu-button {
-  display: block;
-  margin: 4px auto; /* reduced margin for tighter spacing */
-  width: 600px;     /* slightly smaller */
-  height: 150px;    /* slightly smaller */
-  background-size: contain;
-  background-repeat: no-repeat;
-}
+      display: block;
+      margin: 4px auto;
+      width: 600px;
+      height: 150px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
 
+    /* Hover effect on buttons */
     .menu-button:hover {
       transform: scale(1.1);
       filter: brightness(1.2);
     }
 
+    /* Specific backgrounds for each menu option */
     #story-mode {
-  background-image: url('story-mode.gif');
-  width: 500px;
-  height: 160px;
-}
+      background-image: url('story-mode.gif');
+      width: 500px;
+      height: 160px;
+    }
 
-#free-play {
-  background-image: url('free-play.gif');
-  width: 500px;
-  height: 160px;
-}
+    #free-play {
+      background-image: url('free-play.gif');
+      width: 500px;
+      height: 160px;
+    }
 
-#options {
-  background-image: url('options.gif');
-  width: 500px;
-  height: 160px;
-}
+    #options {
+      background-image: url('options.gif');
+      width: 500px;
+      height: 160px;
+    }
 
-#credits {
-  background-image: url('credits.gif');
-  width: 500px;
-  height: 160px;
-}
+    #credits {
+      background-image: url('credits.gif');
+      width: 500px;
+      height: 160px;
+    }
 
+    /* Hover and selected states change images */
     #story-mode:hover,
     #story-mode.selected {
       background-image: url('story-mode-hover.gif');
@@ -93,15 +103,12 @@
       background-image: url('credits-hover.gif');
     }
 
-    .menu-button:hover {
-      transform: scale(1.1);
-      filter: brightness(1.2);
-    }
-
+    /* Prevent hover animation for smoother performance */
     #story-mode, #free-play, #options {
       transition: none;
     }
 
+    /* Title image animation (bump effect) */
     #title-image {
       width: 500px;
       animation: bump 1s ease infinite;
@@ -112,11 +119,13 @@
       50% { transform: scale(1.1); }
     }
 
+    /* "Press ENTER" text */
     #press-enter {
       font-size: 24px;
       margin-top: 20px;
     }
 
+    /* Title image + character sprite */
     #title-container {
       display: flex;
       justify-content: center;
@@ -128,6 +137,7 @@
       margin-right: 20px;
     }
 
+    /* Girlfriend sprite on title screen */
     #gf-sprite {
       position: relative;
       background-image: url('gf_title.gif');
@@ -139,12 +149,14 @@
       display: inline-block;
     }
 
+    /* Game canvas style */
     canvas {
       background-color: #222;
       display: block;
       margin: 0 auto;
     }
 
+    /* Fade-out animation for title */
     @keyframes fadeTop {
       0% {
         opacity: 1;
@@ -160,27 +172,30 @@
       animation: fadeTop 0.7s ease forwards;
     }
 
+    /* Bottom-left version text */
     #version-info {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  font-size: 14px;
-  color: white;
-  font-family: monospace;
-  text-align: left;
-  line-height: 1.4;
-  opacity: 0.7;
-  pointer-events: none;
-  text-shadow: 1px 1px 2px black;
-  }
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 14px;
+      color: white;
+      font-family: monospace;
+      text-align: left;
+      line-height: 1.4;
+      opacity: 0.7;
+      pointer-events: none;
+      text-shadow: 1px 1px 2px black;
+    }
   </style>
 </head>
 <body>
+  <!-- Credit screen -->
   <div id="credit-screen" class="centered">
     <p>Inspired by Friday Night Funkin</p>
     <p>Easy Ass Recode Ngl</p>
   </div>
 
+  <!-- Title screen with animated title and sprite -->
   <div id="title-screen" class="centered">
     <div id="title-container">
       <img src="title.gif" alt="Title Logo" id="title-image" />
@@ -189,6 +204,7 @@
     <p id="press-enter">Press ENTER to Start</p>
   </div>
 
+  <!-- Main menu with 4 options -->
   <div id="main-menu" class="centered">
     <div id="story-mode" class="menu-button"></div>
     <div id="free-play" class="menu-button"></div>
@@ -196,13 +212,16 @@
     <div id="credits" class="menu-button"></div>
   </div>
 
+  <!-- Canvas for the game screen -->
   <canvas id="game-canvas" width="800" height="600" style="display: none;"></canvas>
 
+  <!-- Menu background music -->
   <audio id="menu-music" loop>
     <source src="freakyMenu.ogg" type="audio/ogg" />
     Your browser does not support the audio element.
   </audio>
 
+  <!-- Sound effects -->
   <audio id="scroll-sfx">
     <source src="scrollMenu.ogg" type="audio/ogg" />
   </audio>
@@ -211,22 +230,29 @@
     <source src="confirmMenu.ogg" type="audio/ogg" />
   </audio>
 
+  <!-- Version label -->
   <div id="version-info">JS Engine v0.1 Pre-Alpha<br>Friday Night Funkin' v0.6.2</div>
+
   <script>
+    // Get all the important elements
     const creditScreen = document.getElementById('credit-screen');
     const titleScreen = document.getElementById('title-screen');
     const mainMenu = document.getElementById('main-menu');
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
+
     const music = document.getElementById('menu-music');
     const confirmSound = document.getElementById('confirm-sfx');
     const scrollSound = document.getElementById('scroll-sfx');
-    const menuButtons = mainMenu.querySelectorAll('.menu-button');
-    let selectedIndex = 0;
-    let backgroundPosY = 0;
-    let volume = 1;
-    let transitioning = false;
 
+    const menuButtons = mainMenu.querySelectorAll('.menu-button');
+
+    let selectedIndex = 0;       // Which menu button is selected
+    let backgroundPosY = 0;      // Y position for background scrolling
+    let volume = 1;              // Volume level
+    let transitioning = false;   // Prevents input during transitions
+
+    // Set global volume for all audio
     function setVolume(volume) {
       const volumeValue = volume / 7;
       [scrollSound, confirmSound, music].forEach(audio => {
@@ -236,16 +262,19 @@
 
     setVolume(volume);
 
+    // Update background position when scrolling menu
     function updateBackgroundPosition() {
       mainMenu.style.backgroundPosition = `center ${backgroundPosY}px`;
     }
 
+    // Update the selected button visually
     function updateMenuSelection() {
       menuButtons.forEach((btn, i) => {
         btn.classList.toggle('selected', i === selectedIndex);
       });
     }
 
+    // Show credit screen, then move to title screen
     creditScreen.style.display = 'block';
     setTimeout(() => {
       creditScreen.style.display = 'none';
@@ -253,6 +282,7 @@
       music.play();
     }, 2000);
 
+    // Fade out the title screen and show main menu
     function fadeOutTitle() {
       transitioning = true;
       confirmSound.play();
@@ -265,6 +295,7 @@
       }, 700);
     }
 
+    // Handle keyboard input
     document.addEventListener('keydown', (e) => {
       if (transitioning) return;
 
@@ -276,39 +307,37 @@
       }
 
       if (mainMenu.style.display === 'block') {
-  if (e.key === 'ArrowUp') {
-    const wasAtTop = selectedIndex === 0;
-    selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
-    updateMenuSelection();
-    scrollSound.play();
+        if (e.key === 'ArrowUp') {
+          const wasAtTop = selectedIndex === 0;
+          selectedIndex = (selectedIndex - 1 + menuButtons.length) % menuButtons.length;
+          updateMenuSelection();
+          scrollSound.play();
+          if (wasAtTop) {
+            backgroundPosY = -100;
+          } else if (backgroundPosY < 0) {
+            backgroundPosY += 10;
+          }
 
-    if (wasAtTop) {
-      backgroundPosY = -100; // Reset when wrapping from top to bottom
-    } else if (backgroundPosY < 0) {
-      backgroundPosY += 10;
-    }
+        } else if (e.key === 'ArrowDown') {
+          const wasAtBottom = selectedIndex === menuButtons.length - 1;
+          selectedIndex = (selectedIndex + 1) % menuButtons.length;
+          updateMenuSelection();
+          scrollSound.play();
+          if (wasAtBottom) {
+            backgroundPosY = -75;
+          } else if (backgroundPosY > -100) {
+            backgroundPosY -= 10;
+          }
 
-  } else if (e.key === 'ArrowDown') {
-    const wasAtBottom = selectedIndex === menuButtons.length - 1;
-    selectedIndex = (selectedIndex + 1) % menuButtons.length;
-    updateMenuSelection();
-    scrollSound.play();
+        } else if (e.key === 'Enter') {
+          confirmSound.play();
+          menuButtons[selectedIndex].click(); // Trigger the selected button
+        }
 
-    if (wasAtBottom) {
-      backgroundPosY = -75; // Reset when wrapping from bottom to top
-    } else if (backgroundPosY > -100) {
-      backgroundPosY -= 10;
-    }
+        updateBackgroundPosition();
+      }
 
-  } else if (e.key === 'Enter') {
-    confirmSound.play();
-    menuButtons[selectedIndex].click();
-  }
-
-  updateBackgroundPosition();
-}
-
-
+      // Change volume with - and +
       if (e.key === '-') {
         volume = Math.max(0, volume - 0.1);
         setVolume(volume);
@@ -318,11 +347,12 @@
       }
     });
 
+    // Button click handlers
     document.getElementById('story-mode').addEventListener('click', () => {
       mainMenu.style.display = 'none';
       canvas.style.display = 'block';
       music.pause();
-      startGame();
+      startGame(); // Start the game
     });
 
     document.getElementById('free-play').addEventListener('click', () => {
@@ -334,9 +364,10 @@
     });
 
     document.getElementById('credits').addEventListener('click', () => {
-  alert('Credits coming soon!');
-});
+      alert('Credits coming soon!');
+    });
 
+    // Game loop starts here
     function startGame() {
       const notes = [
         { x: 300, y: -100, speed: 3 },
@@ -344,13 +375,13 @@
       ];
 
       function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear screen
         notes.forEach(note => {
-          note.y += note.speed;
+          note.y += note.speed; // Move note down
           ctx.fillStyle = '#0ff';
-          ctx.fillRect(note.x, note.y, 50, 20);
+          ctx.fillRect(note.x, note.y, 50, 20); // Draw note
         });
-        requestAnimationFrame(gameLoop);
+        requestAnimationFrame(gameLoop); // Repeat loop
       }
 
       gameLoop();
