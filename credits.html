@@ -3,90 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About - JS Engine</title>
-  <link rel="stylesheet" href="style.css" />
-
+  <title>JS Engine Menu</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
       background: black;
-      color: white;
       overflow: hidden;
       cursor: none;
+      font-family: Arial, sans-serif;
     }
 
-    #about-screen {
+    #main-menu {
+      background: url('menu-bg.png') center 0px / cover no-repeat;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
-      background: url('menu-bg.png') center center / cover no-repeat;
+      justify-content: center;
       transition: background-position 0.1s ease;
     }
 
-    h1 {
-      font-size: 64px;
-      margin-bottom: 20px;
-      animation: bump 1s ease infinite;
+    #jsteam-logo {
+      background-image: url('jsteam.gif');
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 500px;
+      height: 150px;
+      margin-bottom: 40px;
+      pointer-events: none;
     }
 
-    p {
-      font-size: 24px;
-      max-width: 800px;
-      text-align: center;
-      line-height: 1.5;
+    .menu-button {
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 400px;
+      height: 100px;
+      margin: 10px 0;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      pointer-events: none;
     }
 
-    #back-button {
-      margin-top: 40px;
-      font-size: 20px;
-      background: transparent;
-      color: white;
-      border: 2px solid white;
-      padding: 10px 30px;
-      cursor: none;
-    }
-
-    #back-button:hover {
-      background: white;
-      color: black;
-    }
-
-    @keyframes bump {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    .menu-button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.3);
     }
   </style>
 </head>
 <body>
-  <div id="about-screen">
-    <h1>About the JS Engine</h1>
-    <p>This is a lightweight FNF-inspired game engine built in vanilla HTML, CSS, and JavaScript. Built with ❤️ for fun, rhythm, and chaos.</p>
-    <p>Navigate using keyboard only. Music slaps. Engine is open for mods and extensions.</p>
-    <button id="back-button" onclick="goBack()">← Back to Menu</button>
+  <div id="main-menu">
+    <div id="jsteam-logo"></div>
+    <div id="cryo" class="menu-button" style="background-image: url('cryo.gif');"></div>
   </div>
 
-  <audio id="menu-music" autoplay loop>
-    <source src="freakyMenu.ogg" type="audio/ogg" />
-    Your browser does not support the audio element.
-  </audio>
-
   <script>
-    const music = document.getElementById('menu-music');
-    music.volume = 0.2;
+    const mainMenu = document.getElementById('main-menu');
+    let backgroundPosY = 0;
 
-    function goBack() {
-      window.location.href = "index.html"; // adjust if your main menu page is named differently
-    }
+    // Scroll background up/down on arrow key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        backgroundPosY += 10;
+      } else if (e.key === 'ArrowDown') {
+        backgroundPosY -= 10;
+      } else if (e.key === 'Escape') {
+        window.location.href = 'index.html';
+      }
 
-    // Optional: Scroll background slightly for movement effect
-    let posY = 0;
-    setInterval(() => {
-      posY -= 0.5;
-      document.getElementById('about-screen').style.backgroundPosition = `center ${posY}px`;
-    }, 50);
+      mainMenu.style.backgroundPosition = `center ${backgroundPosY}px`;
+    });
   </script>
 </body>
 </html>
