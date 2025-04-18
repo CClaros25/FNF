@@ -209,7 +209,7 @@
     <div id="story-mode" class="menu-button"></div>
     <div id="free-play" class="menu-button"></div>
     <div id="options" class="menu-button"></div>
-    <div id="credits" class="menu-button"></div>
+    <a href="credits.html"><div id="credits" class="menu-button"></div></a>
   </div>
 
   <!-- Canvas for the game screen -->
@@ -347,26 +347,7 @@
       }
     });
 
-    // Button click handlers
-    document.getElementById('story-mode').addEventListener('click', () => {
-      mainMenu.style.display = 'none';
-      canvas.style.display = 'block';
-      music.pause();
-      startGame(); // Start the game
-    });
-
-    document.getElementById('free-play').addEventListener('click', () => {
-      alert('Free Play coming soon!');
-    });
-
-    document.getElementById('options').addEventListener('click', () => {
-      alert('Options coming soon!');
-    });
-
-    document.getElementById('credits').addEventListener('click', () => {
-      alert('Credits coming soon!');
-    });
-
+  
     // Game loop starts here
     function startGame() {
       const notes = [
