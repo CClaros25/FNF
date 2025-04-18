@@ -34,13 +34,19 @@
       pointer-events: none;
     }
 
+    .menu-button-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
     .menu-button {
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       width: 400px;
       height: 100px;
-      margin: 10px 0;
       transition: transform 0.2s ease, filter 0.2s ease;
       pointer-events: none;
     }
@@ -49,19 +55,27 @@
       transform: scale(1.05);
       filter: brightness(1.3);
     }
+
+    .menu-icon {
+      width: 64px;
+      height: 64px;
+    }
   </style>
 </head>
 <body>
   <div id="main-menu">
     <div id="jsteam-logo"></div>
-    <div id="cryo" class="menu-button" style="background-image: url('cryo.gif');"></div>
+
+    <div class="menu-button-container">
+      <div id="cryo" class="menu-button" style="background-image: url('cryo.gif');"></div>
+      <img src="icon-cryo.png" alt="Cryo Icon" class="menu-icon" />
+    </div>
   </div>
 
   <script>
     const mainMenu = document.getElementById('main-menu');
     let backgroundPosY = 0;
 
-    // Scroll background up/down on arrow key press
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowUp') {
         backgroundPosY += 10;
