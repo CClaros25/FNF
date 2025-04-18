@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About - JS Engine</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: black;
+      color: white;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    #about-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: url('menu-bg.png') center center / cover no-repeat;
+      transition: background-position 0.1s ease;
+    }
+
+    h1 {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: bump 1s ease infinite;
+    }
+
+    p {
+      font-size: 24px;
+      max-width: 800px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    #back-button {
+      margin-top: 40px;
+      font-size: 20px;
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      padding: 10px 30px;
+      cursor: none;
+    }
+
+    #back-button:hover {
+      background: white;
+      color: black;
+    }
+
+    @keyframes bump {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <div id="about-screen">
+    <h1>About the JS Engine</h1>
+    <p>This is a lightweight FNF-inspired game engine built in vanilla HTML, CSS, and JavaScript. Built with ❤️ for fun, rhythm, and chaos.</p>
+    <p>Navigate using keyboard only. Music slaps. Engine is open for mods and extensions.</p>
+    <button id="back-button" onclick="goBack()">← Back to Menu</button>
+  </div>
+
+  <audio id="menu-music" autoplay loop>
+    <source src="freakyMenu.ogg" type="audio/ogg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const music = document.getElementById('menu-music');
+    music.volume = 0.2;
+
+    function goBack() {
+      window.location.href = "index.html"; // adjust if your main menu page is named differently
+    }
+
+    // Optional: Scroll background slightly for movement effect
+    let posY = 0;
+    setInterval(() => {
+      posY -= 0.5;
+      document.getElementById('about-screen').style.backgroundPosition = `center ${posY}px`;
+    }, 50);
+  </script>
+</body>
+</html>
